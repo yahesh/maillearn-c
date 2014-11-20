@@ -1,0 +1,62 @@
+<?php
+
+  require_once(dirname(__FILE__) . "/../unchroot/unchroot.phs");
+
+  require_once(dirname(__FILE__) . "/maillearn-c.conf.phs");
+
+  function maillearn_c() {
+    // check if the required directory exist
+    // and there is a file at all
+    if (is_file(LOCAL_ABSOLUTE_PATH) &&
+        is_dir(dirname(STATUS_PATH))) {
+      // proceed if there currently is no status file
+      $proceed = (!is_file(STATUS_PATH));
+      if (!$proceed) {
+        // otherwise proceed if the status file is different
+        // from the current file
+        $sha1_local = sha1_file(LOCAL_ABSOLUTE_PATH);
+        $sha1_status = sha1_file(STATUS_PATH);
+
+        // don't proceed if errors happen
+        if ((false !== $sha1_local) && (false !== $sha1_status)) {
+          $proceed = ($sha1_local !== $sha1_status);
+        }
+      }
+
+      // if we proceed
+      if ($proceed) {
+        // copy the file where we can access it later
+        if (copy(LOCAL_ABSOLUTE_PATH, STATUS_PATH)) {
+          // then drop privileges
+          if (force_unroot(PROCESS_USER, PROCESS_GROUP)) {
+            // disallow concurrency (either by timeout or by lock file)
+            if (disallow_concurrency(TIMEOUT)) {
+              // get user information
+              $pwnam = posix_getpwnam(PROCESS_USER);
+              if ((false !== $pwnam) && is_array($pwnam)) {
+                // check if homedir exists
+                if (is_dir($pwnam["dir"])) {
+                  // set parameter values
+                  $dbpath     = DBPATH_PARAM . " " . escapeshellcmd($pwnam["dir"] . DBPATH_RELATIVE);
+                  $prefspath  = PREFSPATH_PARAM . " " . escapeshellcmd($pwnam["dir"] . PREFSPATH_RELATIVE);
+
+                  // now restore learned HAM and SPAM
+                  exec(SA_LEARN_RESTORE . " " . escapeshellcmd(STATUS_PATH) . " ". $dbpath . " " . $prefspath);
+
+                  // send push message
+                  file_put_contents(PUSHINFO_PATH, PUSHINFO_MESSAGE);
+
+                  // free lock
+                  allow_concurrency(TIMEOUT);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  maillearn_c();
+
+?>

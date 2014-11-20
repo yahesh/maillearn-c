@@ -1,0 +1,42 @@
+<?php
+
+  # defines the local absolute path to the spamassassin backup
+  define("LOCAL_ABSOLUTE_PATH", "/home/maillearn/status");
+
+  # defines where the push notification is located
+  define("PUSHINFO_PATH", "/srv/pushinfo/messages/maillearn-c.phs");
+
+  # defines where the script stores its status
+  define("STATUS_PATH", "/srv/maillearn-c/status/status");
+
+  # define timeout for PHP execution (as int)
+  # alternatively defines a lock file (as string)
+  define("TIMEOUT", "/srv/maillearn-c/status/lock");
+
+  # defines the command to restore learned HAM and SPAM
+ define("SA_LEARN_RESTORE", "sa-learn --restore");
+
+  # defines the dbpath parameter
+  define("DBPATH_PARAM", "--dbpath");
+
+  # defines the relative dbpath
+  # do not forget the leading slash
+  define("DBPATH_RELATIVE", "/.spamassassin/bayes");
+
+  # defines the prefspath parameter
+  define("PREFSPATH_PARAM", "--prefspath");
+
+  # defines the relative prefspath
+  # do not forget the leading slash
+  define("PREFSPATH_RELATIVE", "/.spamassassin/user_prefs");
+
+  # defines the user the script shall run as
+  define("PROCESS_USER", "debian-spamd");
+
+  # defines the group the script shall run as
+  define("PROCESS_GROUP", "debian-spamd");
+
+  # defines the push message content
+  define("PUSHINFO_MESSAGE", "new HAM and SPAM learned");
+
+?>
