@@ -41,7 +41,7 @@
                                 DBPATH_RELATIVE) . "\"";
 
                   $prefspath  = PREFSPATH_PARAM . " \"" . escapeshellcmd($pwnam["dir"] .
-                                PREFSPATH_RELATIVE);
+                                PREFSPATH_RELATIVE) . "\"";
 
                   // now restore learned HAM and SPAM
                   exec(SA_LEARN_RESTORE . " \"" . escapeshellcmd(STATUS_PATH) . "\" ".
