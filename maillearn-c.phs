@@ -44,7 +44,7 @@
                                 PREFSPATH_RELATIVE) . "\"";
 
                   // now restore learned HAM and SPAM
-                  exec(SA_LEARN_RESTORE . " \"" . escapeshellcmd(STATUS_PATH) . "\" ".
+                  exec(SA_LEARN_RESTORE . " \"" . escapeshellcmd(STATUS_PATH) . "\" " .
                        $dbpath . " " . $prefspath);
 
                   // send push message
