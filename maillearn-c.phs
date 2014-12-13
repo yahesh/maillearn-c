@@ -37,11 +37,15 @@
                 // check if homedir exists
                 if (is_dir($pwnam["dir"])) {
                   // set parameter values
-                  $dbpath     = DBPATH_PARAM . " " . escapeshellcmd($pwnam["dir"] . DBPATH_RELATIVE);
-                  $prefspath  = PREFSPATH_PARAM . " " . escapeshellcmd($pwnam["dir"] . PREFSPATH_RELATIVE);
+                  $dbpath     = DBPATH_PARAM . " \"" . escapeshellcmd($pwnam["dir"] .
+                                DBPATH_RELATIVE) . "\"";
+
+                  $prefspath  = PREFSPATH_PARAM . " \"" . escapeshellcmd($pwnam["dir"] .
+                                PREFSPATH_RELATIVE);
 
                   // now restore learned HAM and SPAM
-                  exec(SA_LEARN_RESTORE . " " . escapeshellcmd(STATUS_PATH) . " ". $dbpath . " " . $prefspath);
+                  exec(SA_LEARN_RESTORE . " \"" . escapeshellcmd(STATUS_PATH) . "\" ".
+                       $dbpath . " " . $prefspath);
 
                   // send push message
                   file_put_contents(PUSHINFO_PATH, PUSHINFO_MESSAGE);
